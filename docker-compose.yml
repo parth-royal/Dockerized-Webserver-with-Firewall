@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  firewall:
+    image: ubuntu:20.04
+    command: /bin/bash -c "apt update && apt install -y iptables && iptables -A INPUT -p tcp --dport 80 -m hashlimit --hashlimit-above 20/min --hashlimit-mode srcip --hashlimit-name http_flood -j DROP && iptables -A INPUT -p tcp --dport 443 -j ACCEPT && iptables -P INPUT DROP && iptables -P FORWARD DROP && iptables -P OUTPUT ACCEPT && iptables -L"
+    ports:
+      - "80:80"
+      - "443:443"
+    container_name: firewall
+    restart: unless-stopped
+
+  webserver:
+    image: python:3.9
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html:/usr/src/app
+    container_name: webserver
+    command: python -m http.server --directory /usr/src/app 80
+    restart: unless-stopped

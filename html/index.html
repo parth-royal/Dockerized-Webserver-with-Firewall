@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Page</title>
+<style>
+    #content {
+        display: none; /* Initially hide the content */
+    }
+</style>
+</head>
+<body>
+    <div id="login">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <div id="content">
+        <h2>Welcome, <span id="usernameText"></span>!</h2>
+        <p>This is the hidden content. It becomes visible after successful login.</p>
+    </div>
+
+    <script>
+        // In-memory database for username-password pairs
+        const users = {
+            "user1": "password1",
+            "user2": "password2"
+        };
+
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form submission
+            
+            // Get username and password from the form
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Check if username exists and the password is correct
+            if (users.hasOwnProperty(username) && users[username] === password) {
+                // Hide login form
+                document.getElementById("login").style.display = "none";
+                // Show content
+                document.getElementById("content").style.display = "block";
+                // Display username in the welcome message
+                document.getElementById("usernameText").textContent = username;
+            } else {
+                alert("Invalid username or password. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>
+
